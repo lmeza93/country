@@ -1,0 +1,174 @@
+{
+  "version": "13",
+  "site": "https://app.rapidpro.io",
+  "flows": [
+    {
+      "name": "Check country code",
+      "uuid": "df77bb9e-b6ec-4970-bd44-4f941ed2d573",
+      "spec_version": "13.1.0",
+      "language": "eng",
+      "type": "messaging",
+      "nodes": [
+        {
+          "uuid": "69f87354-eb94-480f-9882-335750175b1f",
+          "actions": [
+            {
+              "attachments": [],
+              "text": "Which country?",
+              "type": "send_msg",
+              "quick_replies": [],
+              "uuid": "ed45bc86-019f-42a5-a855-5c66e35fa7d1"
+            }
+          ],
+          "exits": [
+            {
+              "uuid": "472b6d3f-35ce-4975-a152-84ac247a6555",
+              "destination_uuid": "08780d9c-3462-4182-a37e-48f33a8434c8"
+            }
+          ]
+        },
+        {
+          "uuid": "08780d9c-3462-4182-a37e-48f33a8434c8",
+          "actions": [],
+          "router": {
+            "type": "switch",
+            "default_category_uuid": "6b21da49-e0aa-4ffd-a548-6faf990e06a4",
+            "cases": [],
+            "categories": [
+              {
+                "uuid": "6b21da49-e0aa-4ffd-a548-6faf990e06a4",
+                "name": "All Responses",
+                "exit_uuid": "cec24242-3c6c-4ee2-ad41-e9bfb30b1469"
+              }
+            ],
+            "operand": "@input.text",
+            "wait": {
+              "type": "msg"
+            },
+            "result_name": "Countryname"
+          },
+          "exits": [
+            {
+              "uuid": "cec24242-3c6c-4ee2-ad41-e9bfb30b1469",
+              "destination_uuid": "0e54eff5-0a41-4160-a5d6-ac1e77fef019"
+            }
+          ]
+        },
+        {
+          "uuid": "0e54eff5-0a41-4160-a5d6-ac1e77fef019",
+          "actions": [
+            {
+              "uuid": "910e271c-c370-4fdc-a257-d47bd5c76bf2",
+              "headers": {
+                "Accept": "application/json"
+              },
+              "type": "call_webhook",
+              "url": "https://ureport.in/countries/?text=@results.countryname",
+              "body": "",
+              "method": "GET",
+              "result_name": "Result"
+            }
+          ],
+          "router": {
+            "type": "switch",
+            "operand": "@results.result.category",
+            "cases": [
+              {
+                "uuid": "90e50395-e8a3-4ef9-8cca-e69efc60de14",
+                "type": "has_only_text",
+                "arguments": [
+                  "Success"
+                ],
+                "category_uuid": "fa1f7bfd-d051-41c8-a36c-e94b5917e72c"
+              }
+            ],
+            "categories": [
+              {
+                "uuid": "fa1f7bfd-d051-41c8-a36c-e94b5917e72c",
+                "name": "Success",
+                "exit_uuid": "145b4f4c-948f-4c4a-b265-6bc01b147381"
+              },
+              {
+                "uuid": "b122b0df-4147-4363-b440-91bbfbf319cb",
+                "name": "Failure",
+                "exit_uuid": "d01e51a0-e3d5-43f2-ab78-071ad4b0df60"
+              }
+            ],
+            "default_category_uuid": "b122b0df-4147-4363-b440-91bbfbf319cb"
+          },
+          "exits": [
+            {
+              "uuid": "145b4f4c-948f-4c4a-b265-6bc01b147381",
+              "destination_uuid": "721fd534-ff09-441d-b7c1-7777f851948d"
+            },
+            {
+              "uuid": "d01e51a0-e3d5-43f2-ab78-071ad4b0df60",
+              "destination_uuid": null
+            }
+          ]
+        },
+        {
+          "uuid": "721fd534-ff09-441d-b7c1-7777f851948d",
+          "actions": [
+            {
+              "attachments": [],
+              "text": "@webhook.country_code",
+              "type": "send_msg",
+              "quick_replies": [],
+              "uuid": "db0ee5e5-9f21-4f86-9653-94a26f840d69"
+            }
+          ],
+          "exits": [
+            {
+              "uuid": "928aeff9-6cae-4af9-a7e9-00f8f65b82a7",
+              "destination_uuid": null
+            }
+          ]
+        }
+      ],
+      "_ui": {
+        "nodes": {
+          "69f87354-eb94-480f-9882-335750175b1f": {
+            "position": {
+              "left": 0,
+              "top": 0
+            },
+            "type": "execute_actions"
+          },
+          "0e54eff5-0a41-4160-a5d6-ac1e77fef019": {
+            "type": "split_by_webhook",
+            "position": {
+              "left": 60,
+              "top": 220
+            },
+            "config": {}
+          },
+          "721fd534-ff09-441d-b7c1-7777f851948d": {
+            "position": {
+              "left": 20,
+              "top": 460
+            },
+            "type": "execute_actions"
+          },
+          "08780d9c-3462-4182-a37e-48f33a8434c8": {
+            "type": "wait_for_response",
+            "position": {
+              "left": 340,
+              "top": 120
+            },
+            "config": {
+              "cases": {}
+            }
+          }
+        }
+      },
+      "revision": 12,
+      "expire_after_minutes": 10080,
+      "localization": {}
+    }
+  ],
+  "campaigns": [],
+  "triggers": [],
+  "fields": [],
+  "groups": []
+}
